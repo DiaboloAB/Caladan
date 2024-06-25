@@ -1,0 +1,30 @@
+name: Clang-Format Check
+
+on: [push, pull_request]
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install clang-format
+      run: sudo apt-get install clang-format
+
+    - name: Run clang-format
+      run: |
+        # Find all C++ source files and run clang-format on them
+        find . -name '*.h' -o -name '*.cpp' | xargs clang-format -i
+
+    - name: Check for uncommitted changes
+      run: |
+        if [[ `git status --porcelain` ]]; then
+          echo "Code is not formatted according to .clang-format rules."
+          echo "Please run clang-format on your code before committing."
+          git diff
+          exit 1
+        else
+          echo "Code is properly formatted."
+        fi
