@@ -10,9 +10,9 @@ find_package(glfw3 3.3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
 set(SOURCES
-    Main/Main.cpp
-    Renderer/Renderer.cpp
-    Renderer/Window/Window.cpp
+    main/Main.cpp
+    renderer/Renderer.cpp
+    renderer/window/Window.cpp
 )
 
 # set(HEADERS
@@ -21,8 +21,8 @@ set(SOURCES
 # )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/Renderer
-    ${CMAKE_SOURCE_DIR}/Renderer/Window
+    ${CMAKE_SOURCE_DIR}/renderer
+    ${CMAKE_SOURCE_DIR}/renderer/window
 )
 
 add_executable(Caladan ${SOURCES} ${HEADERS})

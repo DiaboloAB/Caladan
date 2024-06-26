@@ -5,18 +5,18 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-//std
+#ifndef GRAPHICSPIPELINE_H
+#define GRAPHICSPIPELINE_H
 
-#ifndef TEST_H
-#define TEST_H
+// std
 
-class test {
+class GraphicsPipeline {
 public:
-    test();
-    ~test();
+    GraphicsPipeline();
+    ~GraphicsPipeline();
 
 private:
     // Member variables
 };
 
-#endif // TEST_H
+#endif // GRAPHICSPIPELINE_H

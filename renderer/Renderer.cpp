@@ -12,3 +12,9 @@ using namespace Caladan::Renderer;
 Renderer::Renderer() {}
 
 Renderer::~Renderer() {}
+
+void Renderer::Run() {
+    while (!_window.ShouldClose()) {
+        glfwPollEvents();
+    }
+}

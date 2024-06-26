@@ -11,6 +11,7 @@
 
 // std
 #include <iostream>
+#include <stdexcept>
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
-        return 84;
+        return EXIT_FAILURE;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

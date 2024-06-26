@@ -21,7 +21,7 @@ class Renderer
     static constexpr int WIDTH = 800;
     static constexpr int HEIGHT = 600;
 
-    void Run(){};
+    void Run();
 
    protected:
    private:

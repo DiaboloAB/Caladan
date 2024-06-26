@@ -23,7 +23,16 @@ class Window
     ~Window();
     void CreateWindow();
     void DestroyWindow();
+
+    Window(const Window &) = delete;
+    Window &operator=(const Window &) = delete;
+
+    bool ShouldClose() const { return glfwWindowShouldClose(_window); }
+
+    // Getters
     GLFWwindow *GetWindow() const { return _window; }
+
+    // Setters
 
    protected:
    private:
