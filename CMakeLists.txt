@@ -15,10 +15,10 @@ set(SOURCES
     Renderer/Window/Window.cpp
 )
 
-set(HEADERS
-    Renderer/Renderer.h
-    Renderer/Window/Window.h
-)
+# set(HEADERS
+#     Renderer/Renderer.hpp
+#     Renderer/Window/Window.hpp
+# )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/Renderer

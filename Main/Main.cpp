@@ -5,9 +5,12 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include <Window.h>
+#include <Renderer.hpp>
 
 #include "GLFW/glfw3.h"
+
+// std
+#include <iostream>
 
 int main()
 {

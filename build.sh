@@ -8,26 +8,18 @@ usage() {
 
 # Function to build the project
 build() {
-    mkdir -p build
-    cd build
-    cmake ..
-    make
+    mkdir -p build && cd build && cmake .. && make
 }
 
 # Function to rebuild the project
 rebuild() {
-    mkdir -p build
-    cd build
-    cmake ..
-    make clean
-    make
+    mkdir -p build && cd build && cmake .. && make clean && make
 }
 
 # Function to clean the build directory
 clean() {
     if [ -d "build" ]; then
-        cd build
-        make clean
+        cd build && make clean
     else
         echo "Build directory does not exist."
     fi
@@ -50,7 +42,7 @@ run() {
 # Check the number of arguments
 if [ $# -ne 1 ]; then
     usage
-fi*
+fi
 
 # Parse the command
 case $1 in
