@@ -12,30 +12,13 @@
 
 int main()
 {
-    Caladan::Renderer::Window window;
-    while (!glfwWindowShouldClose(window.GetWindow()))
-    {
-        glfwPollEvents();
+    Caladan::Renderer::Renderer renderer;
+    try {
+
+    renderer.Run();
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
     }
-    // window.CreateWindow();
-
-    // GLFWwindow* window;
-    // glfwInit();
-    // glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    // window = glfwCreateWindow(800, 600, "Vulkan Window", nullptr, nullptr);
-    // if (!window)
-    // {
-    //     glfwTerminate();
-    //     return 64;
-    // }
-    // while (!glfwWindowShouldClose(window))
-    // {
-    //     // glClear(GL_COLOR_BUFFER_BIT);
-    //     // glfwSwapBuffers(window);
-    //     // glfwPollEvents();
-    // }
-    // glfwTerminate();
-    // return 0;
+    return 0;
 }
