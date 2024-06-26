@@ -8,6 +8,7 @@
 #ifndef RENDERER_HPP_
 #define RENDERER_HPP_
 
+#include <GraphicsPipeline.hpp>
 #include <Window.hpp>
 
 namespace Caladan::Renderer
@@ -26,6 +27,8 @@ class Renderer
    protected:
    private:
     Window _window{WIDTH, HEIGHT, "Caladan"};
+    GraphicsPipeline _graphicsPipeline{"shaders/simpleShader.vert.spv",
+                                       "shaders/simpleShader.frag.spv"};
 };
 }  // namespace Caladan::Renderer
 

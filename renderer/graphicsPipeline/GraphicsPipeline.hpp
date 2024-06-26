@@ -9,14 +9,24 @@
 #define GRAPHICSPIPELINE_H
 
 // std
+#include <string>
+#include <vector>
 
-class GraphicsPipeline {
-public:
-    GraphicsPipeline();
+namespace Caladan::Renderer
+{
+class GraphicsPipeline
+{
+   public:
+    GraphicsPipeline(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
     ~GraphicsPipeline();
 
-private:
+   private:
     // Member variables
-};
+    static std::vector<char> ReadFile(const std::string& filePath);
 
-#endif // GRAPHICSPIPELINE_H
+    void createGraphicsPipeline(const std::string& vertexShaderPath,
+                                const std::string& fragmentShaderPath);
+};
+}  // namespace Caladan::Renderer
+
+#endif  // GRAPHICSPIPELINE_H

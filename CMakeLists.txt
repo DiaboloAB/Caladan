@@ -13,6 +13,7 @@ set(SOURCES
     main/Main.cpp
     renderer/Renderer.cpp
     renderer/window/Window.cpp
+    renderer/graphicsPipeline/GraphicsPipeline.cpp
 )
 
 # set(HEADERS
@@ -23,6 +24,7 @@ set(SOURCES
 include_directories(
     ${CMAKE_SOURCE_DIR}/renderer
     ${CMAKE_SOURCE_DIR}/renderer/window
+    ${CMAKE_SOURCE_DIR}/renderer/graphicsPipeline
 )
 
 add_executable(Caladan ${SOURCES} ${HEADERS})
