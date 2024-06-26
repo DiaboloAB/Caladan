@@ -5,10 +5,26 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include "Renderer.hpp"
+#ifndef CALADAN_HPP_
+#define CALADAN_HPP_
 
-using namespace Caladan::Renderer;
+#include <Renderer.hpp>
 
-Renderer::Renderer() {}
+// std
 
-Renderer::~Renderer() {}
+namespace Caladan
+{
+class Caladan
+{
+   public:
+    Caladan();
+    ~Caladan();
+
+   protected:
+   private:
+    Renderer::Renderer _renderer;
+};
+
+}  // namespace Caladan
+
+#endif /* !CALADAN_HPP_ */

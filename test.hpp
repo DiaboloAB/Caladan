@@ -5,10 +5,18 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include "Renderer.hpp"
+//std
 
-using namespace Caladan::Renderer;
+#ifndef TEST_H
+#define TEST_H
 
-Renderer::Renderer() {}
+class test {
+public:
+    test();
+    ~test();
 
-Renderer::~Renderer() {}
+private:
+    // Member variables
+};
+
+#endif // TEST_H

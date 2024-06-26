@@ -1,23 +1,21 @@
-/*
-** EPITECH PROJECT, 2024
-** Caladan
-** File description:
-** Window
-*/
+/**********************************************************************************
+ * Project: Caladan
+ * Description: Multi-platform 2D and 3D game engine
+ * Author: Alexis BOITEL
+ * Date, Location: 2024, Rennes
+ **********************************************************************************/
 
-#include "Window.h"
+#include "Window.hpp"
 
 using namespace Caladan::Renderer;
 
-Window::Window()
+Window::Window(int width, int height, std::string name)
+    : _width(width), _height(height), _name(name)
 {
     CreateWindow();
 }
 
-Window::~Window()
-{
-    DestroyWindow();
-}
+Window::~Window() { DestroyWindow(); }
 
 void Window::CreateWindow()
 {
@@ -25,7 +23,10 @@ void Window::CreateWindow()
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    _window = glfwCreateWindow(800, 600, "Vulkan Window", nullptr, nullptr);
+    uint32_t glfwExtensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
+
+    _window = glfwCreateWindow(_width, _height, _name.c_str(), nullptr, nullptr);
 }
 
 void Window::DestroyWindow()
