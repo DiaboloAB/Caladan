@@ -14,6 +14,8 @@ set(SOURCES
     renderer/Renderer.cpp
     renderer/window/Window.cpp
     renderer/graphicsPipeline/GraphicsPipeline.cpp
+    renderer/graphicsPipeline/Device.cpp
+    renderer/graphicsPipeline/SwapChain.cpp
 )
 
 # set(HEADERS

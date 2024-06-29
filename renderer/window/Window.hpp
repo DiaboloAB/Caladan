@@ -28,6 +28,8 @@ class Window
     Window &operator=(const Window &) = delete;
 
     bool ShouldClose() const { return glfwWindowShouldClose(_window); }
+    VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
+    void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
     // Getters
     GLFWwindow *GetWindow() const { return _window; }

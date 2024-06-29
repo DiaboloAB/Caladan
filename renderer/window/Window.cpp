@@ -7,6 +7,10 @@
 
 #include "Window.hpp"
 
+// std
+#include <iostream>
+#include <stdexcept>
+
 using namespace Caladan::Renderer;
 
 Window::Window(int width, int height, std::string name)
@@ -33,4 +37,12 @@ void Window::DestroyWindow()
 {
     glfwDestroyWindow(_window);
     glfwTerminate();
+}
+
+void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
+{
+    if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create window surface!");
+    }
 }

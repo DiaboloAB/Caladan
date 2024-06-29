@@ -18,7 +18,7 @@ int main()
     Caladan::Renderer::Renderer renderer;
     try
     {
-        renderer.Run();
+        renderer.run();
     }
     catch (const std::exception &e)
     {
