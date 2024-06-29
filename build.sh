@@ -8,6 +8,7 @@ usage() {
 
 # Function to build the project
 build() {
+    cd shaders && ./compileShaders.sh && cd ..
     mkdir -p build && cd build && cmake .. && make
 }
 

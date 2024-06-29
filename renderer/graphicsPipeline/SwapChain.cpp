@@ -1,3 +1,10 @@
+/**********************************************************************************
+ * Project: Caladan
+ * Description: Multi-platform 2D and 3D game engine
+ * Author: Alexis BOITEL
+ * Date, Location: 2024, Rennes
+ **********************************************************************************/
+
 #include "SwapChain.hpp"
 
 // std
@@ -12,6 +19,20 @@
 using namespace Caladan::Renderer;
 
 SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent) : device{deviceRef}, windowExtent{extent}
+{
+    init();
+}
+
+SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous)
+    : device{deviceRef}, windowExtent{extent}, oldSwapChain{previous}
+{
+    init();
+
+    // invalidate old swap chain
+    oldSwapChain = nullptr;
+}
+
+void SwapChain::init()
 {
     createSwapChain();
     createImageViews();
@@ -169,7 +190,7 @@ void SwapChain::createSwapChain()
     createInfo.presentMode = presentMode;
     createInfo.clipped = VK_TRUE;
 
-    createInfo.oldSwapchain = VK_NULL_HANDLE;
+    createInfo.oldSwapchain = oldSwapChain == nullptr ? VK_NULL_HANDLE : oldSwapChain->swapChain;
 
     if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS)
     {
@@ -381,7 +402,7 @@ VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
 {
     for (const auto &availableFormat : availableFormats)
     {
-        if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
+        if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
             availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
         {
             return availableFormat;

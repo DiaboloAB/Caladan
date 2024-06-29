@@ -10,6 +10,7 @@
 
 #include <Device.hpp>
 #include <GraphicsPipeline.hpp>
+#include <Model.hpp>
 #include <SwapChain.hpp>
 #include <Window.hpp>
 
@@ -35,21 +36,22 @@ class Renderer
 
    protected:
    private:
+    void loadModel();
     void createPipelineLayout();
     void createPipeline();
     void createCommandBuffers();
+    void freeCommandBuffers();
     void drawFrame();
+    void recreateSwapChain();
+    void recordCommandBuffer(int imageIndex);
 
     Window _window{WIDTH, HEIGHT, "Caladan"};
     Device _device{_window};
-    SwapChain _swapChain{_device, _window.GetExtent()};
+    std::unique_ptr<SwapChain> _swapChain;
     std::unique_ptr<GraphicsPipeline> _graphicsPipeline{nullptr};
-    //  GraphicsPipeline _graphicsPipeline{_device, "shaders/simpleShader.vert.spv",
-    //                                     "shaders/simpleShader.frag.spv",
-    //                                     GraphicsPipeline::defaultPipelineConfigInfo(WIDTH,
-    //                                     HEIGHT)};
     VkPipelineLayout _pipelineLayout;
     std::vector<VkCommandBuffer> _commandBuffers;
+    std::unique_ptr<Model> _model{nullptr};
 };
 }  // namespace Caladan::Renderer
 

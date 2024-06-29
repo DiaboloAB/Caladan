@@ -21,25 +21,34 @@ class Window
    public:
     Window(int width, int height, std::string name);
     ~Window();
-    void CreateWindow();
-    void DestroyWindow();
 
     Window(const Window &) = delete;
     Window &operator=(const Window &) = delete;
 
-    bool ShouldClose() const { return glfwWindowShouldClose(_window); }
-    VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
+    void createWindow();
+    void destroyWindow();
+    bool shouldClose() const { return glfwWindowShouldClose(_window); }
     void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
     // Getters
-    GLFWwindow *GetWindow() const { return _window; }
+    GLFWwindow *getWindow() const { return _window; }
+    VkExtent2D getExtent() const
+    {
+        return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)};
+    }
+    bool framebufferResized() const { return _framebufferResized; }
+    void resetFramebufferResized() { _framebufferResized = false; }
 
     // Setters
 
    protected:
    private:
+    static void framebufferResizeCallback(GLFWwindow *window, int width, int height);
+
     int _width;
     int _height;
+    bool _framebufferResized = false;
+
     std::string _name;
     GLFWwindow *_window;
 };

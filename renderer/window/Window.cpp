@@ -16,24 +16,26 @@ using namespace Caladan::Renderer;
 Window::Window(int width, int height, std::string name)
     : _width(width), _height(height), _name(name)
 {
-    CreateWindow();
+    createWindow();
 }
 
-Window::~Window() { DestroyWindow(); }
+Window::~Window() { destroyWindow(); }
 
-void Window::CreateWindow()
+void Window::createWindow()
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     uint32_t glfwExtensionCount = 0;
     vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
 
     _window = glfwCreateWindow(_width, _height, _name.c_str(), nullptr, nullptr);
+    glfwSetWindowUserPointer(_window, this);
+    glfwSetFramebufferSizeCallback(_window, framebufferResizeCallback);
 }
 
-void Window::DestroyWindow()
+void Window::destroyWindow()
 {
     glfwDestroyWindow(_window);
     glfwTerminate();
@@ -45,4 +47,12 @@ void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
     {
         throw std::runtime_error("Failed to create window surface!");
     }
+}
+
+void Window::framebufferResizeCallback(GLFWwindow *window, int width, int height)
+{
+    auto app = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+    app->_framebufferResized = true;
+    app->_width = width;
+    app->_height = height;
 }
