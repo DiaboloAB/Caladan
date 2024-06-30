@@ -17,6 +17,7 @@ set(SOURCES
     renderer/graphicsPipeline/Device.cpp
     renderer/graphicsPipeline/SwapChain.cpp
     renderer/model/Model.cpp
+    renderer/gameObject/GameObject.cpp
 )
 
 # set(HEADERS
@@ -29,6 +30,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/renderer/window
     ${CMAKE_SOURCE_DIR}/renderer/graphicsPipeline
     ${CMAKE_SOURCE_DIR}/renderer/model
+    ${CMAKE_SOURCE_DIR}/renderer/gameObject
 )
 
 add_executable(Caladan ${SOURCES} ${HEADERS})

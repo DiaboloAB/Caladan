@@ -9,8 +9,8 @@
 #define RENDERER_HPP_
 
 #include <Device.hpp>
+#include <GameObject.hpp>
 #include <GraphicsPipeline.hpp>
-#include <Model.hpp>
 #include <SwapChain.hpp>
 #include <Window.hpp>
 
@@ -36,7 +36,7 @@ class Renderer
 
    protected:
    private:
-    void loadModel();
+    void loadGameObjects();
     void createPipelineLayout();
     void createPipeline();
     void createCommandBuffers();
@@ -44,6 +44,7 @@ class Renderer
     void drawFrame();
     void recreateSwapChain();
     void recordCommandBuffer(int imageIndex);
+    void renderGameObjects(VkCommandBuffer commandBuffer);
 
     Window _window{WIDTH, HEIGHT, "Caladan"};
     Device _device{_window};
@@ -51,7 +52,7 @@ class Renderer
     std::unique_ptr<GraphicsPipeline> _graphicsPipeline{nullptr};
     VkPipelineLayout _pipelineLayout;
     std::vector<VkCommandBuffer> _commandBuffers;
-    std::unique_ptr<Model> _model{nullptr};
+    std::vector<GameObject> _gameObjects;
 };
 }  // namespace Caladan::Renderer
 

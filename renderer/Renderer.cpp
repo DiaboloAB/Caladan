@@ -7,15 +7,27 @@
 
 #include "Renderer.hpp"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
 // std
 #include <array>
 #include <stdexcept>
 
 using namespace Caladan::Renderer;
 
+struct SimplePushConstantData
+{
+    alignas(16) glm::mat2 transform{1.0f};
+    alignas(16) glm::vec2 offset;
+    alignas(16) glm::vec3 color;
+};
+
 Renderer::Renderer()
 {
-    loadModel();
+    loadGameObjects();
     createPipelineLayout();
     recreateSwapChain();
     createCommandBuffers();
@@ -35,12 +47,17 @@ void Renderer::run()
 
 void Renderer::createPipelineLayout()
 {
+    VkPushConstantRange pushConstantRange{};
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(SimplePushConstantData);
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 0;
     pipelineLayoutInfo.pSetLayouts = nullptr;
-    pipelineLayoutInfo.pushConstantRangeCount = 0;
-    pipelineLayoutInfo.pPushConstantRanges = nullptr;
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
     if (vkCreatePipelineLayout(_device.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout) !=
         VK_SUCCESS)
@@ -148,9 +165,7 @@ void Renderer::recordCommandBuffer(int imageIndex)
     VkRect2D scissor{{0, 0}, _swapChain->getSwapChainExtent()};
     vkCmdSetScissor(_commandBuffers[imageIndex], 0, 1, &scissor);
 
-    _graphicsPipeline->bind(_commandBuffers[imageIndex]);
-    _model->bind(_commandBuffers[imageIndex]);
-    _model->draw(_commandBuffers[imageIndex]);
+    renderGameObjects(_commandBuffers[imageIndex]);
 
     vkCmdEndRenderPass(_commandBuffers[imageIndex]);
     if (vkEndCommandBuffer(_commandBuffers[imageIndex]) != VK_SUCCESS)
@@ -188,12 +203,42 @@ void Renderer::drawFrame()
     }
 }
 
-void Renderer::loadModel()
+void Renderer::loadGameObjects()
 {
     std::vector<Model::Vertex> vertices = {
         {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
         {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
         {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
     };
-    _model = std::make_unique<Model>(_device, vertices);
+    auto model = std::make_shared<Model>(_device, vertices);
+
+    auto triangle1 = GameObject::create();
+    triangle1.model = model;
+    triangle1.color = {1.0f, 0.0f, 0.0f};
+    triangle1.transform2d.translation.x = 0.2f;
+    triangle1.transform2d.scale = {2.0f, 1.0f};
+    triangle1.transform2d.rotation = glm::half_pi<float>();
+
+    _gameObjects.push_back(std::move(triangle1));
+}
+
+void Renderer::renderGameObjects(VkCommandBuffer commandBuffer)
+{
+    _graphicsPipeline->bind(commandBuffer);
+
+    for (auto &gameObject : _gameObjects)
+    {
+        gameObject.transform2d.rotation =
+            glm::mod(gameObject.transform2d.rotation + 0.004f, glm::two_pi<float>());
+
+        SimplePushConstantData push{};
+        push.offset = gameObject.transform2d.translation;
+        push.color = gameObject.color;
+        push.transform = gameObject.transform2d.mat2();
+        vkCmdPushConstants(commandBuffer, _pipelineLayout,
+                           VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                           sizeof(SimplePushConstantData), &push);
+        gameObject.model->bind(commandBuffer);
+        gameObject.model->draw(commandBuffer);
+    }
 }
