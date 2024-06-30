@@ -40,7 +40,7 @@ class App
 
     Render::Window _window{WIDTH, HEIGHT, "Caladan"};
     Render::Device _device{_window};
-    Render::Renderer               _renderer{_window, _device};
+    Render::Renderer _renderer{_window, _device};
 
     std::vector<Render::GameObject> _gameObjects;
 };
