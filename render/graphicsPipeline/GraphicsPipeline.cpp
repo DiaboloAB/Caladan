@@ -6,14 +6,13 @@
  **********************************************************************************/
 
 #include <Model.hpp>
-
-#include "GraphicsPipeline.hpp"
-
 // std
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+
+#include "GraphicsPipeline.hpp"
 
 using namespace Caladan::Render;
 

@@ -6,17 +6,16 @@
  **********************************************************************************/
 
 #include <RenderSystem.hpp>
-
-#include "App.hpp"
-
+// glm
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-
 // std
 #include <array>
 #include <stdexcept>
+
+#include "App.hpp"
 
 using namespace Caladan;
 
