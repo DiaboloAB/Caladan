@@ -9,12 +9,11 @@
 #define RENDERER_HPP_
 
 #include <Device.hpp>
-#include <GameObject.hpp>
-#include <GraphicsPipeline.hpp>
 #include <SwapChain.hpp>
 #include <Window.hpp>
 
 // std
+#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -23,36 +22,41 @@ namespace Caladan::Renderer
 class Renderer
 {
    public:
-    Renderer();
+    Renderer(Window& window, Device& device);
     ~Renderer();
 
     Renderer(const Renderer&) = delete;
     Renderer& operator=(const Renderer&) = delete;
 
-    static constexpr int WIDTH = 800;
-    static constexpr int HEIGHT = 600;
+    // getters
+    VkRenderPass getSwapChainRenderPass() const { return _swapChain->getRenderPass(); }
+    bool isFrameStarted() const { return _isFrameStarted; }
+    VkCommandBuffer getCurrentCommandBuffer() const
+    {
+        assert(_isFrameStarted && "Cannot get command buffer when frame is not started.");
+        return _commandBuffers[_currentImageIndex];
+    }
 
-    void run();
+    VkCommandBuffer beginFrame();
+    void endFrame();
+    void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+    void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
 
    protected:
    private:
-    void loadGameObjects();
-    void createPipelineLayout();
-    void createPipeline();
+    uint32_t _currentImageIndex{0};
+    bool _isFrameStarted{false};
+
     void createCommandBuffers();
     void freeCommandBuffers();
-    void drawFrame();
     void recreateSwapChain();
-    void recordCommandBuffer(int imageIndex);
-    void renderGameObjects(VkCommandBuffer commandBuffer);
 
-    Window _window{WIDTH, HEIGHT, "Caladan"};
-    Device _device{_window};
+    Window& _window;
+    Device& _device;
+
     std::unique_ptr<SwapChain> _swapChain;
-    std::unique_ptr<GraphicsPipeline> _graphicsPipeline{nullptr};
-    VkPipelineLayout _pipelineLayout;
+
     std::vector<VkCommandBuffer> _commandBuffers;
-    std::vector<GameObject> _gameObjects;
 };
 }  // namespace Caladan::Renderer
 

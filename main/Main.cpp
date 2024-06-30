@@ -5,7 +5,7 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include <Renderer.hpp>
+#include <CaladanApp.hpp>
 
 #include "GLFW/glfw3.h"
 
@@ -15,10 +15,10 @@
 
 int main()
 {
-    Caladan::Renderer::Renderer renderer;
+    Caladan::Renderer::CaladanApp caladan;
     try
     {
-        renderer.run();
+        caladan.run();
     }
     catch (const std::exception &e)
     {
