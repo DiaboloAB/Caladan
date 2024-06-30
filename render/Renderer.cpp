@@ -11,7 +11,7 @@
 #include <array>
 #include <stdexcept>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 Renderer::Renderer(Window &window, Device &device) : _window(window), _device(device)
 {
@@ -38,17 +38,23 @@ void Renderer::recreateSwapChain()
     {
         std::shared_ptr<SwapChain> oldSwapChain = std::move(_swapChain);
         _swapChain = std::make_unique<SwapChain>(_device, extent, oldSwapChain);
-        if (_swapChain->imageCount() != _commandBuffers.size())
+        if (!oldSwapChain->compareSwapFormats(*_swapChain.get()))
         {
-            freeCommandBuffers();
-            createCommandBuffers();
+            throw std::runtime_error("Swap chain image format has changed!");
         }
+        // if (_swapChain->imageCount() != _commandBuffers.size())
+        // {
+        //     freeCommandBuffers();
+        //     createCommandBuffers();
+        // }
     }
 }
 
+#include <iostream>
+
 void Renderer::createCommandBuffers()
 {
-    _commandBuffers.resize(_swapChain->imageCount());
+    _commandBuffers.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.commandPool = _device.getCommandPool();
@@ -83,7 +89,7 @@ VkCommandBuffer Renderer::beginFrame()
         throw std::runtime_error("Failed to acquire next image");
     }
     _isFrameStarted = true;
-    auto commandBuffer = _commandBuffers[_currentImageIndex];
+    auto commandBuffer = getCurrentCommandBuffer();
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -96,7 +102,7 @@ VkCommandBuffer Renderer::beginFrame()
 void Renderer::endFrame()
 {
     assert(_isFrameStarted && "Can't call endFrame while frame is not in progress");
-    auto commandBuffer = _commandBuffers[_currentImageIndex];
+    auto commandBuffer = getCurrentCommandBuffer();
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to record command buffer");
@@ -113,6 +119,7 @@ void Renderer::endFrame()
         throw std::runtime_error("Failed to present swap chain image");
     }
     _isFrameStarted = false;
+    _currentFrameIndex = (_currentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
 }
 void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer)
 {

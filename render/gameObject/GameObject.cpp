@@ -5,30 +5,8 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#ifndef CALADANAPP_H
-#define CALADANAPP_H
+#include "GameObject.hpp"
 
-// std
+using namespace Caladan::Render;
 
-namespace Caladan::Renderer
-{
-
-class CaladanApp
-{
-   public:
-    CaladanApp();
-    ~CaladanApp();
-
-    void run();
-
-    // Getters
-
-    // Setters
-
-   private:
-    // Member variables
-};
-
-}  // namespace Caladan::Renderer
-
-#endif  // CALADANAPP_H
+GameObject::~GameObject() {}

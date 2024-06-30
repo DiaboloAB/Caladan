@@ -13,7 +13,7 @@
 // std
 #include <memory>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 
 struct Transform2dComponent
@@ -66,6 +66,6 @@ class GameObject
     id_t _id;
 };
 
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render
 
 #endif  // GAMEOBJECT_H

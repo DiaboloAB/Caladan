@@ -11,7 +11,7 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 Window::Window(int width, int height, std::string name)
     : _width(width), _height(height), _name(name)

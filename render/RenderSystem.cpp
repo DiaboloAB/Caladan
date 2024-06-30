@@ -5,7 +5,7 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include "CaladanApp.hpp"
+#include "RenderSystem.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -16,7 +16,7 @@
 #include <array>
 #include <stdexcept>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 struct SimplePushConstantData
 {
@@ -25,32 +25,18 @@ struct SimplePushConstantData
     alignas(16) glm::vec3 color;
 };
 
-CaladanApp::CaladanApp()
+RenderSystem::RenderSystem(Device &device, VkRenderPass renderPass) : _device(device)
 {
-    loadGameObjects();
     createPipelineLayout();
-    createPipeline();
+    createPipeline(renderPass);
 }
 
-CaladanApp::~CaladanApp() { vkDestroyPipelineLayout(_device.device(), _pipelineLayout, nullptr); }
-
-void CaladanApp::run()
+RenderSystem::~RenderSystem()
 {
-    while (!_window.shouldClose())
-    {
-        glfwPollEvents();
-        if (auto commandBuffer = _renderer.beginFrame())
-        {
-            _renderer.beginSwapChainRenderPass(commandBuffer);
-            renderGameObjects(commandBuffer);
-            _renderer.endSwapChainRenderPass(commandBuffer);
-            _renderer.endFrame();
-        }
-    }
-    vkDeviceWaitIdle(_device.device());
+    vkDestroyPipelineLayout(_device.device(), _pipelineLayout, nullptr);
 }
 
-void CaladanApp::createPipelineLayout()
+void RenderSystem::createPipelineLayout()
 {
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -71,46 +57,28 @@ void CaladanApp::createPipelineLayout()
     }
 }
 
-void CaladanApp::createPipeline()
+void RenderSystem::createPipeline(VkRenderPass renderPass)
 {
     assert(_pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
     PipelineConfigInfo pipelineConfigInfo{};
     GraphicsPipeline::defaultPipelineConfigInfo(pipelineConfigInfo);
-    pipelineConfigInfo.renderPass = _renderer.getSwapChainRenderPass();
+    pipelineConfigInfo.renderPass = renderPass;
     pipelineConfigInfo.pipelineLayout = _pipelineLayout;
     _graphicsPipeline =
         std::make_unique<GraphicsPipeline>(_device, "shaders/simpleShader.vert.spv",
                                            "shaders/simpleShader.frag.spv", pipelineConfigInfo);
 }
 
-void CaladanApp::loadGameObjects()
-{
-    std::vector<Model::Vertex> vertices = {
-        {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-    };
-    auto model = std::make_shared<Model>(_device, vertices);
-
-    auto triangle1 = GameObject::create();
-    triangle1.model = model;
-    triangle1.color = {1.0f, 0.0f, 0.0f};
-    triangle1.transform2d.translation.x = 0.2f;
-    triangle1.transform2d.scale = {2.0f, 1.0f};
-    triangle1.transform2d.rotation = glm::half_pi<float>();
-
-    _gameObjects.push_back(std::move(triangle1));
-}
-
-void CaladanApp::renderGameObjects(VkCommandBuffer commandBuffer)
+void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
+                                     const std::vector<GameObject> &gameObjects)
 {
     _graphicsPipeline->bind(commandBuffer);
 
-    for (auto &gameObject : _gameObjects)
+    for (auto &gameObject : gameObjects)
     {
-        gameObject.transform2d.rotation =
-            glm::mod(gameObject.transform2d.rotation + 0.004f, glm::two_pi<float>());
+        // gameObject.transform2d.rotation =
+        //     glm::mod(gameObject.transform2d.rotation + 0.004f, glm::two_pi<float>());
 
         SimplePushConstantData push{};
         push.offset = gameObject.transform2d.translation;

@@ -17,7 +17,7 @@
 // std
 #include <vector>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 
 class Model
@@ -55,6 +55,6 @@ class Model
     // Member variables
 };
 
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render
 
 #endif  // MODEL_H

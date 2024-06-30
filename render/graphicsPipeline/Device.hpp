@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 
 struct SwapChainSupportDetails
@@ -102,4 +102,4 @@ class Device
     const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 };
 
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render

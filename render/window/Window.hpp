@@ -14,7 +14,7 @@
 // std
 #include <string>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 class Window
 {
@@ -52,6 +52,6 @@ class Window
     std::string _name;
     GLFWwindow *_window;
 };
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render
 
 #endif /* !WINDOW_H_ */

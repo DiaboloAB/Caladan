@@ -17,7 +17,7 @@
 #include <memory>
 #include <vector>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 class Renderer
 {
@@ -34,7 +34,12 @@ class Renderer
     VkCommandBuffer getCurrentCommandBuffer() const
     {
         assert(_isFrameStarted && "Cannot get command buffer when frame is not started.");
-        return _commandBuffers[_currentImageIndex];
+        return _commandBuffers[_currentFrameIndex];
+    }
+    int getFrameIndex() const
+    {
+        assert(_isFrameStarted && "Cannot get frame when frame is not started.");
+        return _currentFrameIndex;
     }
 
     VkCommandBuffer beginFrame();
@@ -45,6 +50,7 @@ class Renderer
    protected:
    private:
     uint32_t _currentImageIndex{0};
+    int _currentFrameIndex{0};
     bool _isFrameStarted{false};
 
     void createCommandBuffers();
@@ -58,6 +64,6 @@ class Renderer
 
     std::vector<VkCommandBuffer> _commandBuffers;
 };
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render
 
 #endif /* !RENDERER_HPP_ */

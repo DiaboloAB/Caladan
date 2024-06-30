@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 struct PipelineConfigInfo
 {
@@ -62,6 +62,6 @@ class GraphicsPipeline
     VkShaderModule _vertexShaderModule;
     VkShaderModule _fragmentShaderModule;
 };
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render
 
 #endif  // GRAPHICSPIPELINE_H

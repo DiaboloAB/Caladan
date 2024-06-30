@@ -11,7 +11,7 @@
 #include <cassert>
 #include <cstring>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 Model::Model(Device& device, const std::vector<Vertex>& vertices) : _device(device)
 {

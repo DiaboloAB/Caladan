@@ -6,7 +6,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace Caladan::Renderer
+namespace Caladan::Render
 {
 
 // local callback functions
@@ -585,4 +585,4 @@ void Device::createImageWithInfo(const VkImageCreateInfo &imageInfo,
     }
 }
 
-}  // namespace Caladan::Renderer
+}  // namespace Caladan::Render

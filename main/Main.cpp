@@ -5,7 +5,7 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
-#include <CaladanApp.hpp>
+#include <App.hpp>
 
 #include "GLFW/glfw3.h"
 
@@ -15,7 +15,7 @@
 
 int main()
 {
-    Caladan::Renderer::CaladanApp caladan;
+    Caladan::App caladan;
     try
     {
         caladan.run();

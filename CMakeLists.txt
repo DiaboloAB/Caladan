@@ -11,14 +11,15 @@ find_package(Vulkan REQUIRED)
 
 set(SOURCES
     main/Main.cpp
-    renderer/Renderer.cpp
-    renderer/window/Window.cpp
-    renderer/graphicsPipeline/GraphicsPipeline.cpp
-    renderer/graphicsPipeline/Device.cpp
-    renderer/graphicsPipeline/SwapChain.cpp
-    renderer/model/Model.cpp
-    renderer/gameObject/GameObject.cpp
-    core/CaladanApp.cpp
+    render/Renderer.cpp
+    render/RenderSystem.cpp
+    render/window/Window.cpp
+    render/graphicsPipeline/GraphicsPipeline.cpp
+    render/graphicsPipeline/Device.cpp
+    render/graphicsPipeline/SwapChain.cpp
+    render/model/Model.cpp
+    render/gameObject/GameObject.cpp
+    core/App.cpp
 )
 
 # set(HEADERS
@@ -27,11 +28,11 @@ set(SOURCES
 # )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/renderer
-    ${CMAKE_SOURCE_DIR}/renderer/window
-    ${CMAKE_SOURCE_DIR}/renderer/graphicsPipeline
-    ${CMAKE_SOURCE_DIR}/renderer/model
-    ${CMAKE_SOURCE_DIR}/renderer/gameObject
+    ${CMAKE_SOURCE_DIR}/render
+    ${CMAKE_SOURCE_DIR}/render/window
+    ${CMAKE_SOURCE_DIR}/render/graphicsPipeline
+    ${CMAKE_SOURCE_DIR}/render/model
+    ${CMAKE_SOURCE_DIR}/render/gameObject
     ${CMAKE_SOURCE_DIR}/core
 )
 

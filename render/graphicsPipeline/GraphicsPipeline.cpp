@@ -15,7 +15,7 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 GraphicsPipeline::GraphicsPipeline(Device& device, const std::string& vertexShaderPath,
                                    const std::string& fragmentShaderPath,

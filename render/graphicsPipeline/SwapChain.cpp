@@ -16,7 +16,7 @@
 #include <set>
 #include <stdexcept>
 
-using namespace Caladan::Renderer;
+using namespace Caladan::Render;
 
 SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent) : device{deviceRef}, windowExtent{extent}
 {
@@ -324,6 +324,7 @@ void SwapChain::createFramebuffers()
 void SwapChain::createDepthResources()
 {
     VkFormat depthFormat = findDepthFormat();
+    swapChainDepthFormat = depthFormat;
     VkExtent2D swapChainExtent = getSwapChainExtent();
 
     depthImages.resize(imageCount());
