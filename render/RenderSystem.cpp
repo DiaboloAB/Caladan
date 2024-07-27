@@ -20,9 +20,8 @@ using namespace Caladan::Render;
 
 struct SimplePushConstantData
 {
-    alignas(16) glm::mat2 transform{1.0f};
-    alignas(16) glm::vec2 offset;
-    alignas(16) glm::vec3 color;
+    glm::mat4 transform{1.f};
+    alignas(16) glm::vec3 color{};
 };
 
 RenderSystem::RenderSystem(Device &device, VkRenderPass renderPass) : _device(device)
@@ -71,19 +70,20 @@ void RenderSystem::createPipeline(VkRenderPass renderPass)
 }
 
 void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
-                                     const std::vector<GameObject> &gameObjects)
+                                     std::vector<GameObject> &gameObjects)
 {
     _graphicsPipeline->bind(commandBuffer);
 
     for (auto &gameObject : gameObjects)
     {
-        // gameObject.transform2d.rotation =
-        //     glm::mod(gameObject.transform2d.rotation + 0.004f, glm::two_pi<float>());
+        gameObject.transform.rotation.y =
+            glm::mod(gameObject.transform.rotation.y - 0.001f, glm::two_pi<float>());
+        // gameObject.transform.rotation.x =
+        //     glm::mod(gameObject.transform.rotation.x - 0.001f, glm::two_pi<float>());
 
         SimplePushConstantData push{};
-        push.offset = gameObject.transform2d.translation;
         push.color = gameObject.color;
-        push.transform = gameObject.transform2d.mat2();
+        push.transform = gameObject.transform.mat4();
         vkCmdPushConstants(commandBuffer, _pipelineLayout,
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                            sizeof(SimplePushConstantData), &push);
