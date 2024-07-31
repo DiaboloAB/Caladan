@@ -30,6 +30,7 @@ class Renderer
 
     // getters
     VkRenderPass getSwapChainRenderPass() const { return _swapChain->getRenderPass(); }
+    float getAspectRatio() const { return _swapChain->extentAspectRatio(); }
     bool isFrameStarted() const { return _isFrameStarted; }
     VkCommandBuffer getCurrentCommandBuffer() const
     {

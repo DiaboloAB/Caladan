@@ -14,6 +14,7 @@ build() {
 
 # Function to rebuild the project
 rebuild() {
+    cd shaders && ./compileShaders.sh && cd ..
     mkdir -p build && cd build && cmake .. && make clean && make
 }
 
@@ -44,6 +45,10 @@ run() {
 if [ $# -ne 1 ]; then
     usage
 fi
+
+buildshaders() {
+    cd shaders && ./compileShaders.sh && cd ..
+}
 
 # Parse the command
 case $1 in

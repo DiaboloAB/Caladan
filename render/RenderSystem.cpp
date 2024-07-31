@@ -24,7 +24,7 @@ struct SimplePushConstantData
     alignas(16) glm::vec3 color{};
 };
 
-RenderSystem::RenderSystem(Device &device, VkRenderPass renderPass) : _device(device)
+RenderSystem::RenderSystem(Device& device, VkRenderPass renderPass) : _device(device)
 {
     createPipelineLayout();
     createPipeline(renderPass);
@@ -70,20 +70,16 @@ void RenderSystem::createPipeline(VkRenderPass renderPass)
 }
 
 void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
-                                     std::vector<GameObject> &gameObjects)
+                                     std::vector<GameObject>& gameObjects, const Camera& camera)
 {
     _graphicsPipeline->bind(commandBuffer);
+    auto projectionView = camera.getProjection() * camera.getView();
 
-    for (auto &gameObject : gameObjects)
+    for (auto& gameObject : gameObjects)
     {
-        gameObject.transform.rotation.y =
-            glm::mod(gameObject.transform.rotation.y - 0.001f, glm::two_pi<float>());
-        // gameObject.transform.rotation.x =
-        //     glm::mod(gameObject.transform.rotation.x - 0.001f, glm::two_pi<float>());
-
         SimplePushConstantData push{};
         push.color = gameObject.color;
-        push.transform = gameObject.transform.mat4();
+        push.transform = projectionView * gameObject.transform.mat4();
         vkCmdPushConstants(commandBuffer, _pipelineLayout,
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                            sizeof(SimplePushConstantData), &push);

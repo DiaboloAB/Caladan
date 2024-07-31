@@ -19,7 +19,9 @@ set(SOURCES
     render/graphicsPipeline/SwapChain.cpp
     render/model/Model.cpp
     render/gameObject/GameObject.cpp
+    render/camera/Camera.cpp
     core/App.cpp
+    input/KeyboardMovementController.cpp
 )
 
 # set(HEADERS
@@ -33,7 +35,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/render/graphicsPipeline
     ${CMAKE_SOURCE_DIR}/render/model
     ${CMAKE_SOURCE_DIR}/render/gameObject
+    ${CMAKE_SOURCE_DIR}/render/camera
     ${CMAKE_SOURCE_DIR}/core
+    #tmp
+    ${CMAKE_SOURCE_DIR}/input
 )
 
 add_executable(Caladan ${SOURCES} ${HEADERS})

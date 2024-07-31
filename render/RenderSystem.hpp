@@ -8,6 +8,7 @@
 #ifndef RENDERSYSTEM_HPP_
 #define RENDERSYSTEM_HPP_
 
+#include <Camera.hpp>
 #include <Device.hpp>
 #include <GameObject.hpp>
 #include <GraphicsPipeline.hpp>
@@ -28,7 +29,8 @@ class RenderSystem
     RenderSystem(const RenderSystem&) = delete;
     RenderSystem& operator=(const RenderSystem&) = delete;
 
-    void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects);
+    void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects,
+                           const Camera& camera);
 
    protected:
    private:

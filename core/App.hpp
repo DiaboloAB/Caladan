@@ -18,6 +18,8 @@
 #include <memory>
 #include <vector>
 
+#define MAX_DELTA_TIME 0.1f
+
 namespace Caladan
 {
 class App
