@@ -32,7 +32,13 @@ class Model
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
     };
 
-    Model(Device& device, const std::vector<Vertex>& vertices);
+    struct Data
+    {
+        std::vector<Vertex> vertices{};
+        std::vector<u_int32_t> indices{};
+    };
+
+    Model(Device& device, const Model::Data& Data);
     ~Model();
 
     Model(const Model&) = delete;
@@ -47,12 +53,18 @@ class Model
 
    private:
     void createVertexBuffer(const std::vector<Vertex>& vertices);
+    void createIndexBuffer(const std::vector<u_int32_t>& indices);
 
     Device& _device;
+
     VkBuffer _vertexBuffer;
     VkDeviceMemory _vertexBufferMemory;
     uint32_t _vertexCount;
-    // Member variables
+
+    bool _hasIndexBuffer = false;
+    VkBuffer _indexBuffer;
+    VkDeviceMemory _indexBufferMemory;
+    uint32_t _indexCount;
 };
 
 }  // namespace Caladan::Render
