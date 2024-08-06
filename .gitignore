@@ -42,3 +42,6 @@ Makefile
 Caladan
 
 *.spv
+
+libs/tinyobjloader/
+models/

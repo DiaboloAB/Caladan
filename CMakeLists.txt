@@ -10,18 +10,18 @@ find_package(glfw3 3.3 REQUIRED)
 find_package(Vulkan REQUIRED)
 
 set(SOURCES
-    main/Main.cpp
-    render/Renderer.cpp
-    render/RenderSystem.cpp
-    render/window/Window.cpp
-    render/graphicsPipeline/GraphicsPipeline.cpp
-    render/graphicsPipeline/Device.cpp
-    render/graphicsPipeline/SwapChain.cpp
-    render/model/Model.cpp
-    render/gameObject/GameObject.cpp
-    render/camera/Camera.cpp
-    core/App.cpp
-    input/KeyboardMovementController.cpp
+    src/main/Main.cpp
+    src/render/Renderer.cpp
+    src/render/RenderSystem.cpp
+    src/render/window/Window.cpp
+    src/render/graphicsPipeline/GraphicsPipeline.cpp
+    src/render/graphicsPipeline/Device.cpp
+    src/render/graphicsPipeline/SwapChain.cpp
+    src/render/model/Model.cpp
+    src/render/gameObject/GameObject.cpp
+    src/render/camera/Camera.cpp
+    src/core/App.cpp
+    src/input/KeyboardMovementController.cpp
 )
 
 # set(HEADERS
@@ -30,15 +30,20 @@ set(SOURCES
 # )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/render
-    ${CMAKE_SOURCE_DIR}/render/window
-    ${CMAKE_SOURCE_DIR}/render/graphicsPipeline
-    ${CMAKE_SOURCE_DIR}/render/model
-    ${CMAKE_SOURCE_DIR}/render/gameObject
-    ${CMAKE_SOURCE_DIR}/render/camera
-    ${CMAKE_SOURCE_DIR}/core
+    ${CMAKE_SOURCE_DIR}/src/render
+    ${CMAKE_SOURCE_DIR}/src/render/window
+    ${CMAKE_SOURCE_DIR}/src/render/graphicsPipeline
+    ${CMAKE_SOURCE_DIR}/src/render/model
+    ${CMAKE_SOURCE_DIR}/src/render/gameObject
+    ${CMAKE_SOURCE_DIR}/src/render/camera
+    ${CMAKE_SOURCE_DIR}/src/core
     #tmp
-    ${CMAKE_SOURCE_DIR}/input
+    ${CMAKE_SOURCE_DIR}/src/input
+
+    #utils
+    ${CMAKE_SOURCE_DIR}/src/utils
+
+    ${CMAKE_SOURCE_DIR}/libs/tinyobjloader
 )
 
 add_executable(Caladan ${SOURCES} ${HEADERS})

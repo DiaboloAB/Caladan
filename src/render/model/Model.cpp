@@ -5,11 +5,33 @@
  * Date, Location: 2024, Rennes
  **********************************************************************************/
 
+#define TINYOBJLOADER_IMPLEMENTATION  // Define this in exactly one source file
+#include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 #include "Model.hpp"
+#include "utils.hpp"
 
 // std
 #include <cassert>
 #include <cstring>
+#include <iostream>
+#include <unordered_map>
+
+namespace std
+{
+template <>
+struct hash<Caladan::Render::Model::Vertex>
+{
+    size_t operator()(Caladan::Render::Model::Vertex const& vertex) const
+    {
+        size_t seed = 0;
+        Caladan::hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.texCoord);
+        return seed;
+    }
+};
+}  // namespace std
 
 using namespace Caladan::Render;
 
@@ -129,5 +151,80 @@ std::vector<VkVertexInputAttributeDescription> Model::Vertex::getAttributeDescri
     return {
         {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
         {1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)},
+        {2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)},
+        {3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCoord)},
     };
+}
+
+std::unique_ptr<Model> Model::createModelFromFile(Device& device, const std::string& filePath)
+{
+    Model::Data modelData{};
+    modelData.loadModel(filePath);
+    std::cout << "Model has " << modelData.vertices.size() << " vertices and "
+              << modelData.indices.size() << " indices" << std::endl;
+    return std::make_unique<Model>(device, modelData);
+}
+
+void Model::Data::loadModel(const std::string& filePath)
+{
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    std::string warn, err;
+
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str()))
+    {
+        throw std::runtime_error(warn + err);
+    }
+
+    vertices.clear();
+    indices.clear();
+
+    std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+    for (const auto& shape : shapes)
+    {
+        for (const auto& index : shape.mesh.indices)
+        {
+            Vertex vertex{};
+
+            if (index.vertex_index >= 0)
+            {
+                vertex.position = {
+                    attrib.vertices[3 * index.vertex_index + 0],
+                    attrib.vertices[3 * index.vertex_index + 1],
+                    attrib.vertices[3 * index.vertex_index + 2],
+                };
+
+                vertex.color = {
+                    attrib.colors[3 * index.vertex_index + 0],
+                    attrib.colors[3 * index.vertex_index + 1],
+                    attrib.colors[3 * index.vertex_index + 2],
+                };
+            }
+
+            if (index.normal_index >= 0)
+            {
+                vertex.normal = {
+                    attrib.normals[3 * index.normal_index + 0],
+                    attrib.normals[3 * index.normal_index + 1],
+                    attrib.normals[3 * index.normal_index + 2],
+                };
+            }
+
+            if (index.texcoord_index >= 0)
+            {
+                vertex.texCoord = {
+                    attrib.texcoords[2 * index.texcoord_index + 0],
+                    attrib.texcoords[2 * index.texcoord_index + 1],
+                };
+            }
+
+            if (uniqueVertices.count(vertex) == 0)
+            {
+                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                vertices.push_back(vertex);
+            }
+            indices.push_back(uniqueVertices[vertex]);
+        }
+    }
 }
